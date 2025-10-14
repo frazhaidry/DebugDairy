@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -15,7 +16,7 @@ const Header = () => {
         <a href="#features" className="hover:text-white transition">Features</a>
         <a href="#community" className="hover:text-white transition">Community</a>
         <a href="#contributors" className="hover:text-white transition">Contributors</a>
-        <a href="#docs" className="hover:text-white transition">Docs</a>
+        <Link to="/docs" className="hover:text-white transition">Docs</Link>
       </nav>
 
       {/* Right buttons */}
@@ -23,9 +24,9 @@ const Header = () => {
         <button className="px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 transition">
           Login
         </button>
-        <button className="px-4 py-2 rounded-md bg-blue-500 hover:bg-blue-600 text-white font-medium transition">
+        <Link to="/docs" className="px-4 py-2 rounded-md bg-blue-500 hover:bg-blue-600 text-white font-medium transition">
           Get Started
-        </button>
+        </Link>
       </div>
 
       {/* Mobile Menu Button */}
@@ -42,10 +43,10 @@ const Header = () => {
           <a href="#features" className="py-2 hover:text-blue-400">Features</a>
           <a href="#community" className="py-2 hover:text-blue-400">Community</a>
           <a href="#contributors" className="py-2 hover:text-blue-400">Contributors</a>
-          <a href="#docs" className="py-2 hover:text-blue-400">Docs</a>
-          <button className="mt-4 px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition">
+          <Link to="/docs" className="py-2 hover:text-blue-400">Docs</Link>
+          <Link to="/docs" className="mt-4 px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition">
             Get Started
-          </button>
+          </Link>
         </div>
       )}
     </header>
