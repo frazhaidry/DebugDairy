@@ -14,13 +14,6 @@ const Header = () => {
     setIsLoggedIn(!!token);
   }, [location]);
 
-  const handleDocsClick = (e) => {
-    if (!isLoggedIn) {
-      e.preventDefault();
-      toast.info("Please login to access the docs");
-      navigate('/login');
-    }
-  };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -41,7 +34,7 @@ const Header = () => {
         <Link to="/features" className="hover:text-white transition">Features</Link>
         <Link to="/community" className="hover:text-white transition">Community</Link>
         <Link to="/contributors" className="hover:text-white transition">Contributors</Link>
-        <Link to="/docs" className="hover:text-white transition" onClick={handleDocsClick}>Docs</Link>
+        <Link to="/docs" className="hover:text-white transition" >Docs</Link>
       </nav>
 
       {/* Right buttons */}
@@ -76,7 +69,7 @@ const Header = () => {
           <a href="#features" className="py-2 hover:text-blue-400">Features</a>
           <a href="#community" className="py-2 hover:text-blue-400">Community</a>
           <a href="#contributors" className="py-2 hover:text-blue-400">Contributors</a>
-          <Link to="/docs" className="py-2 hover:text-blue-400" onClick={handleDocsClick}>Docs</Link>
+          <Link to="/docs" className="py-2 hover:text-blue-400">Docs</Link>
           {!isLoggedIn ? (
             <>
               <Link
