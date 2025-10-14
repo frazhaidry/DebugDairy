@@ -11,7 +11,6 @@ import Features from "../pages/Features/Features.jsx";
 import Community from "../pages/Community/Community.jsx";
 import Contributors from "../pages/Contributors/Contributors.jsx";
 
-
 const AppRoutes = () => {
   return (
     <Routes>
@@ -22,21 +21,16 @@ const AppRoutes = () => {
       <Route path="/community" element={<Community />} />
       <Route path="/contributors" element={<Contributors />} />
 
-      <Route path="/docs" element={
-        <ProtectedRoute>
-          <Feed />
-        </ProtectedRoute>
-      } />
-      <Route path="/docs/new" element={
-        <ProtectedRoute>
-          <CreateDoc />
-        </ProtectedRoute>
-      } />
-      <Route path="/docs/:id" element={
-        <ProtectedRoute>
-          <PostDetail />
-        </ProtectedRoute>
-      } />
+      <Route path="/docs" element={<Feed />} />
+      <Route 
+        path="/docs/new" 
+        element={
+          <ProtectedRoute>
+            <CreateDoc />
+          </ProtectedRoute>
+        } 
+      />
+      <Route path="/docs/:id" element={<PostDetail />} />
     </Routes>
   );
 };
