@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion as Motion } from "framer-motion";
 import { ArrowRight, Code2, Users, Zap, Github } from "lucide-react";
 
 const Landing = () => {
@@ -94,26 +94,26 @@ const Landing = () => {
 
       {/* ================= COMMUNITY SECTION ================= */}
       <section className="min-h-screen flex flex-col items-center justify-center text-center px-8 py-20 bg-gradient-to-b from-gray-950 to-black">
-        <motion.h2
+        <Motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="text-4xl md:text-5xl font-extrabold mb-8"
         >
           Join the <span className="text-blue-500">Community</span>
-        </motion.h2>
+        </Motion.h2>
 
         <p className="max-w-2xl text-gray-400 mb-10">
           DebugDiary is more than a tool — it’s a developer movement.
           Connect with peers, share insights, and grow together.
         </p>
 
-        <motion.button
+        <Motion.button
           whileHover={{ scale: 1.05 }}
           className="px-8 py-4 bg-blue-600 hover:bg-blue-700 rounded-2xl font-semibold text-lg flex items-center gap-2 transition"
         >
           Join Discord <ArrowRight size={20} />
-        </motion.button>
+        </Motion.button>
       </section>
 
     
