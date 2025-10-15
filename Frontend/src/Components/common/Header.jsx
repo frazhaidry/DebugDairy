@@ -1,32 +1,58 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token);
+  }, [location]);
+
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    toast.success("Logged out successfully");
+    navigate('/');
+  };
 
   return (
     <header className="sticky top-0 z-50 flex items-center justify-between px-8 py-4 bg-black text-white border-b border-gray-800">
       {/* Logo */}
-      <div className="flex items-center gap-2 text-xl font-semibold tracking-tight">
+      <div onClick={() => navigate('/')} className="flex items-center gap-2 text-xl font-semibold tracking-tight cursor-pointer">
         <span className="text-blue-400">&lt;/&gt;</span> DebugDiary
       </div>
 
       {/* Nav Links */}
       <nav className="hidden md:flex items-center gap-8 text-gray-300">
-        <a href="#features" className="hover:text-white transition">Features</a>
-        <a href="#community" className="hover:text-white transition">Community</a>
-        <a href="#contributors" className="hover:text-white transition">Contributors</a>
-        <Link to="/docs" className="hover:text-white transition">Docs</Link>
+        <Link to="/features" className="hover:text-white transition">Features</Link>
+        <Link to="/community" className="hover:text-white transition">Community</Link>
+        <Link to="/contributors" className="hover:text-white transition">Contributors</Link>
+        <Link to="/docs" className="hover:text-white transition" >Docs</Link>
       </nav>
 
       {/* Right buttons */}
       <div className="hidden md:flex items-center gap-4">
-        <button className="px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 transition">
-          Login
-        </button>
-        <Link to="/docs" className="px-4 py-2 rounded-md bg-blue-500 hover:bg-blue-600 text-white font-medium transition">
-          Get Started
-        </Link>
+        {!isLoggedIn ? (
+          <>
+            <button onClick={() => navigate('/login')} className="px-4 py-2 rounded-md bg-gray-800 hover:bg-gray-700 transition">
+              Login
+            </button>
+            <button onClick={() => navigate('/register')} className="px-4 py-2 rounded-md bg-blue-500 hover:bg-blue-600 text-white font-medium transition">
+              Get Started
+            </button>
+          </>
+        ) : (
+          <button onClick={handleLogout} className="px-4 py-2 rounded-md bg-red-600 hover:bg-red-700 text-white font-medium transition">
+            Logout
+          </button>
+        )}
       </div>
 
       {/* Mobile Menu Button */}
@@ -44,9 +70,23 @@ const Header = () => {
           <a href="#community" className="py-2 hover:text-blue-400">Community</a>
           <a href="#contributors" className="py-2 hover:text-blue-400">Contributors</a>
           <Link to="/docs" className="py-2 hover:text-blue-400">Docs</Link>
-          <Link to="/docs" className="mt-4 px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition">
-            Get Started
-          </Link>
+          {!isLoggedIn ? (
+            <>
+              <Link
+                to="/register"
+                className="mt-4 px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition"
+              >
+                Get Started
+              </Link>
+              <button onClick={() => navigate("/login")} className="mt-4 px-4 py-2 rounded-md bg-gray-800 text-white hover:bg-gray-700 transition">
+                Login
+              </button>
+            </>
+          ) : (
+            <button onClick={handleLogout} className="mt-4 px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition">
+              Logout
+            </button>
+          )}
         </div>
       )}
     </header>
