@@ -9,20 +9,52 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  //for validation
+  const validateForm = () => {
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim()) {
+      toast.error('Email is required');
+      return false;
+    }
+    if (!emailRegex.test(email)) {
+      toast.error('Please enter a valid email address');
+      return false;
+    }
+
+    // Password validation
+    if (!password) {
+      toast.error('Password is required');
+      return false;
+    }
+    if (password.length < 6) {
+      toast.error('Password must be at least 6 characters long');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
     try {
-      const res = await axios.post('http://localhost:8000/api/auth/login', 
-        { email, password }, 
+      const res = await axios.post('http://localhost:8000/api/auth/login',
+        { email, password },
         { withCredentials: true }
       );
-      
+
       // Save token to localStorage!
       localStorage.setItem('token', res.data.token);   // <-- Important line
-    //   console.log(res);
+      //   console.log(res);
+
       toast.success(res.data.message);
       navigate('/'); // Redirect to homepage
-    } catch(error) {
+    } catch (error) {
       toast.error(error.response?.data?.message || 'Login failed');
     }
   };
@@ -59,7 +91,7 @@ const Login = () => {
             Track your bugs and breakthroughs with ease. Let's get you signed in.
           </p>
           <svg width="100" height="100" viewBox="0 0 24 24" fill="#007BFF" xmlns="http://www.w3.org/2000/svg" style={{ marginBottom: '2rem' }}>
-            <path d="M9.707 16.293a1 1 0 0 1-1.414 1.414l-4.586-4.586a1 1 0 0 1 0-1.414l4.586-4.586a1 1 0 0 1 1.414 1.414L6.414 12l3.293 3.293zM14.293 7.707a1 1 0 0 1 1.414-1.414l4.586 4.586a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414-1.414L17.586 12l-3.293-3.293z"/>
+            <path d="M9.707 16.293a1 1 0 0 1-1.414 1.414l-4.586-4.586a1 1 0 0 1 0-1.414l4.586-4.586a1 1 0 0 1 1.414 1.414L6.414 12l3.293 3.293zM14.293 7.707a1 1 0 0 1 1.414-1.414l4.586 4.586a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414-1.414L17.586 12l-3.293-3.293z" />
           </svg>
         </div>
         {/* Right Side - Login form */}
