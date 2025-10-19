@@ -72,6 +72,11 @@ const Register = () => {
       toast.success(res.data.message); // Show success toast
       // Remove navigation if you want to handle redirect later or manually
       // navigate('/login');
+      
+      //for reset the form after registration
+      setName('');
+      setEmail('');
+      setPassword('');
 
       toast.success(res.data.message);
     } catch (error) {

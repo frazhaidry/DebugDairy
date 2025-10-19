@@ -52,6 +52,9 @@ const Login = () => {
       localStorage.setItem('token', res.data.token);   // <-- Important line
       //   console.log(res);
 
+      //for reset the form after login
+      setEmail('');
+      setPassword('');
       toast.success(res.data.message);
       navigate('/'); // Redirect to homepage
     } catch (error) {
