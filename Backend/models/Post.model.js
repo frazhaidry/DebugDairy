@@ -34,19 +34,15 @@ const postSchema = new mongoose.Schema({
         required: true
     },
 
-    Likes: [
-        {
+    likes: {
+        type: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
-        }
-    ],
-
-    createdAt: {
-        type: Date,
-        default: Date.now
+        }],
+        default: []
     },
 
-}, {timestamps: true})
+}, {timestamps: true}) // Mongoose will automatically add `createdAt` and `updatedAt` fields
 
 const Post = mongoose.model("Post", postSchema);
 
