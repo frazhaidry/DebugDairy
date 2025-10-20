@@ -1,3 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --text: #1f2937;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --secondary: #6b7280;
+  --border: #e5e7eb;
+  --card-bg: #f9fafb;
+  --glow: rgba(59, 130, 246, 0.15);
+  --glow-purple: rgba(147, 51, 234, 0.15);
+}
+
+[data-theme="dark"] {
+  --background: #060606;
+  --text: #ffffff;
+  --primary: #3b82f6;
+  --primary-hover: #60a5fa;
+  --secondary: #9ca3af;
+  --border: #374151;
+  --card-bg: #111827;
+  --glow: rgba(59, 130, 246, 0.15);
+  --glow-purple: rgba(147, 51, 234, 0.15);
+}
+
+html {
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+}
+
+button.primary {
+  background-color: var(--primary);
+  color: var(--text);
+}
+button.primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.glow-effect {
+  background-color: var(--glow);
+  will-change: transform, opacity;
+}
+
+.glow-effect-purple {
+  background-color: var(--glow-purple);
+}

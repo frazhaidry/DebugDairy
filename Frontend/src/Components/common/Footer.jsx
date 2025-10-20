@@ -1,10 +1,11 @@
+import React from 'react';
 
 const Footer = () => {
   return (
-    <footer className="text-center py-6 text-gray-500 border-t border-gray-800 bg-black">
-        Built with ❤️ by the Open Source Community
+    <footer className="text-center py-6 text-secondary dark:text-dark-secondary border-t border-border dark:border-dark-border bg-background dark:bg-dark-background transition-colors duration-500">
+      Built with ❤️ by the Open Source Community
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;
