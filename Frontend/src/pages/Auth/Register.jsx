@@ -9,8 +9,60 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const validateForm = () => {
+    // Name validation
+    if (!name.trim()) {
+      toast.error('Name is required');
+      return false;
+    }
+    if (name.length < 2) {
+      toast.error('Name must be at least 2 characters long');
+      return false;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim()) {
+      toast.error('Email is required');
+      return false;
+    }
+    if (!emailRegex.test(email)) {
+      toast.error('Please enter a valid email address');
+      return false;
+    }
+
+    // Password validation
+    if (!password) {
+      toast.error('Password is required');
+      return false;
+    }
+    if (password.length < 6) {
+      toast.error('Password must be at least 6 characters long');
+      return false;
+    }
+    if (!/[A-Z]/.test(password)) {
+      toast.error('Password must contain at least one uppercase letter');
+      return false;
+    }
+    if (!/[0-9]/.test(password)) {
+      toast.error('Password must contain at least one number');
+      return false;
+    }
+    if (!/[^A-Za-z0-9]/.test(password)) {
+      toast.error('Password must contain at least one special character');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       const res = await axios.post('http://localhost:8000/api/auth/register', {
         name,
@@ -20,6 +72,8 @@ const Register = () => {
       toast.success(res.data.message); // Show success toast
       // Remove navigation if you want to handle redirect later or manually
       // navigate('/login');
+
+      toast.success(res.data.message);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Registration failed'); // Show error toast
     }
@@ -57,7 +111,7 @@ const Register = () => {
             Start logging bugs and breakthroughs with the developer community.
           </p>
           <svg width="100" height="100" viewBox="0 0 24 24" fill="#007BFF" xmlns="http://www.w3.org/2000/svg" style={{ marginBottom: '2rem' }}>
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-1.85 0-3.55-.63-4.9-1.69l1.03-1.55C9.06 17.29 10.47 18 12 18c1.53 0 2.94-.71 3.87-1.24l1.03 1.55C15.55 19.37 13.85 20 12 20zm6.36-3.09l-1.03-1.55c.37-.56.67-1.19.83-1.87H19c0 .89-.29 1.78-.64 2.42zM5 12c0-.44.04-.88.1-1.3h1.71c-.16.8-.29 1.6-.29 2.3s.13 1.5.29 2.3H5.1A7.882 7.882 0 0 1 5 12zm1.53 5.09C6.29 15.78 6 14.89 6 14h1.21c.14.69.33 1.34.56 1.99l-1.03 1.55zM12 6c2.37 0 4.35 1.64 4.85 3.84h-1.71A3.002 3.002 0 0 0 12 8c-1.3 0-2.4.84-2.84 2.04h-1.71C7.65 7.64 9.63 6 12 6zm-2.97 5.34A4.98 4.98 0 0 1 12 10c1.3 0 2.4.84 2.84 2.04C14.95 14.32 13.6 16 12 16s-2.95-1.68-2.97-4.66zm7.42-1.9A7.936 7.936 0 0 1 19 12h-1.21c-.16-.8-.29-1.6-.29-2.3s.13-1.5.29-2.3H18.9z"/>
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-1.85 0-3.55-.63-4.9-1.69l1.03-1.55C9.06 17.29 10.47 18 12 18c1.53 0 2.94-.71 3.87-1.24l1.03 1.55C15.55 19.37 13.85 20 12 20zm6.36-3.09l-1.03-1.55c.37-.56.67-1.19.83-1.87H19c0 .89-.29 1.78-.64 2.42zM5 12c0-.44.04-.88.1-1.3h1.71c-.16.8-.29 1.6-.29 2.3s.13 1.5.29 2.3H5.1A7.882 7.882 0 0 1 5 12zm1.53 5.09C6.29 15.78 6 14.89 6 14h1.21c.14.69.33 1.34.56 1.99l-1.03 1.55zM12 6c2.37 0 4.35 1.64 4.85 3.84h-1.71A3.002 3.002 0 0 0 12 8c-1.3 0-2.4.84-2.84 2.04h-1.71C7.65 7.64 9.63 6 12 6zm-2.97 5.34A4.98 4.98 0 0 1 12 10c1.3 0 2.4.84 2.84 2.04C14.95 14.32 13.6 16 12 16s-2.95-1.68-2.97-4.66zm7.42-1.9A7.936 7.936 0 0 1 19 12h-1.21c-.16-.8-.29-1.6-.29-2.3s.13-1.5.29-2.3H18.9z" />
           </svg>
         </div>
         {/* Right Side - Register form */}
@@ -146,6 +200,10 @@ const Register = () => {
               }}
               placeholder="Create a password"
             />
+            {/* Password Validation Message */}
+            <p style={{ color: '#CCCCCC', fontSize: '0.875rem', marginBottom: '0.9rem', opacity: 0.7 }}>
+              Password must have at least 6 characters, one uppercase letter, one number, and one special character.
+            </p>
             <button type="submit" style={{
               width: '100%',
               padding: '0.75rem',
