@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import { Search, Heart, MessageSquare, Bookmark } from "lucide-react";
-import axiosInstance from "../../api/axiosInstance";
-import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from 'react';
+import { Search, Heart, MessageSquare, Bookmark } from 'lucide-react';
+import axiosInstance from '../../api/axiosInstance';
+import { Link } from 'react-router-dom';
 
 function formatRelative(dateStr) {
   const d = new Date(dateStr);
@@ -14,24 +14,24 @@ function formatRelative(dateStr) {
   return `${days}d ago`;
 }
 
-const CATEGORIES = ["Frontend", "Backend", "DevOps", "Database", "DSA"];
+const CATEGORIES = ['Frontend', 'Backend', 'DevOps', 'Database', 'DSA'];
 
 export default function Feed() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [query, setQuery] = useState("");
-  const [tab, setTab] = useState("Latest"); // Latest | Trending | Following
+  const [error, setError] = useState('');
+  const [query, setQuery] = useState('');
+  const [tab, setTab] = useState('Latest'); // Latest | Trending | Following
 
   useEffect(() => {
     let mounted = true;
     (async () => {
       try {
         setLoading(true);
-        const data = await axiosInstance.get("/posts");
+        const data = await axiosInstance.get('/posts');
         if (mounted) setPosts(data.posts || data || []);
       } catch (e) {
-        setError(e.message || "Failed to load feed");
+        setError(e.message || 'Failed to load feed');
       } finally {
         setLoading(false);
       }
@@ -62,7 +62,7 @@ export default function Feed() {
     const q = query.trim().toLowerCase();
     let arr = [...posts];
 
-    if (tab === "Trending") {
+    if (tab === 'Trending') {
       arr.sort((a, b) => (b.Likes?.length || 0) - (a.Likes?.length || 0));
     } else {
       arr.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -70,32 +70,34 @@ export default function Feed() {
 
     if (!q) return arr;
     return arr.filter((p) => {
-      const inTitle = (p.title || "").toLowerCase().includes(q);
-      const inProblem = (p.problem || "").toLowerCase().includes(q);
-      const inSolution = (p.solution || "").toLowerCase().includes(q);
-      const inTags = (p.tags || []).some((t) => (t || "").toLowerCase().includes(q));
+      const inTitle = (p.title || '').toLowerCase().includes(q);
+      const inProblem = (p.problem || '').toLowerCase().includes(q);
+      const inSolution = (p.solution || '').toLowerCase().includes(q);
+      const inTags = (p.tags || []).some((t) => (t || '').toLowerCase().includes(q));
       return inTitle || inProblem || inSolution || inTags;
     });
   }, [posts, query, tab]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white">
+    <div className="min-h-screen bg-background dark:bg-dark-background text-text dark:text-dark-text transition-colors duration-500">
       {/* Top bar */}
-      <div className="border-b border-gray-800 bg-black sticky top-0 z-40">
+      <div className="border-b border-border dark:border-dark-border bg-background dark:bg-dark-background sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Link to="/" className="font-semibold text-lg">DebugDiary</Link>
+          <Link to="/" className="font-semibold text-lg text-text dark:text-dark-text">
+            DebugDiary
+          </Link>
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary dark:text-dark-secondary" size={18} />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search documentation..."
-              className="w-full pl-10 pr-4 py-2 rounded-md border border-gray-700 bg-gray-900 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-10 pr-4 py-2 rounded-md border border-border dark:border-dark-border bg-card dark:bg-dark-card text-text dark:text-dark-text placeholder-secondary dark:placeholder-dark-secondary focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-dark-primary"
             />
           </div>
           <Link
             to="/docs/new"
-            className="px-3 py-2 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700"
+            className="px-3 py-2 text-sm rounded-md bg-primary dark:bg-dark-primary text-text dark:text-dark-text hover:bg-primary-hover dark:hover:bg-dark-primary-hover transition"
           >
             New Doc
           </Link>
@@ -106,14 +108,14 @@ export default function Feed() {
         {/* Left sidebar */}
         <aside className="lg:col-span-3 space-y-6">
           <div>
-            <h3 className="font-semibold mb-3">Popular Tags</h3>
+            <h3 className="font-semibold mb-3 text-text dark:text-dark-text">Popular Tags</h3>
             <div className="flex flex-wrap gap-2">
-              {allTags.length === 0 && <span className="text-gray-500 text-sm">No tags yet</span>}
+              {allTags.length === 0 && <span className="text-secondary dark:text-dark-secondary text-sm">No tags yet</span>}
               {allTags.slice(0, 12).map((tag) => (
                 <button
                   key={tag}
                   onClick={() => setQuery(tag)}
-                  className="px-3 py-1 text-sm rounded-full border border-gray-700 bg-gray-900 hover:bg-gray-800 text-gray-200"
+                  className="px-3 py-1 text-sm rounded-full border border-border dark:border-dark-border bg-card dark:bg-dark-card hover:bg-secondary dark:hover:bg-dark-secondary text-text dark:text-dark-text transition"
                 >
                   {tag}
                 </button>
@@ -122,12 +124,12 @@ export default function Feed() {
           </div>
 
           <div>
-            <h3 className="font-semibold mb-3">Categories</h3>
+            <h3 className="font-semibold mb-3 text-text dark:text-dark-text">Categories</h3>
             <ul className="space-y-2">
               {CATEGORIES.map((c) => (
                 <li key={c} className="flex justify-between text-sm">
-                  <span className="text-gray-300">{c}</span>
-                  <span className="text-gray-500">{categoryCounts[c]}</span>
+                  <span className="text-text dark:text-dark-text">{c}</span>
+                  <span className="text-secondary dark:text-dark-secondary">{categoryCounts[c]}</span>
                 </li>
               ))}
             </ul>
@@ -136,17 +138,19 @@ export default function Feed() {
 
         {/* Main feed */}
         <main className="lg:col-span-9">
-          <h1 className="text-2xl font-bold mb-2">Documentation Feed</h1>
-          <p className="text-gray-600 mb-4">Browse developer documentation shared by the community</p>
+          <h1 className="text-2xl font-bold mb-2 text-text dark:text-dark-text">Documentation Feed</h1>
+          <p className="text-secondary dark:text-dark-secondary mb-4">Browse developer documentation shared by the community</p>
 
           <div className="flex items-center gap-2 mb-6">
-            {["Latest", "Trending", "Following"].map((t) => (
+            {['Latest', 'Trending', 'Following'].map((t) => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
                 className={
-                  "px-3 py-1.5 rounded-md text-sm border " +
-                  (tab === t ? "bg-gray-800 border-gray-700 text-white" : "bg-gray-900 hover:bg-gray-800")
+                  'px-3 py-1.5 rounded-md text-sm border transition ' +
+                  (tab === t
+                    ? 'bg-card dark:bg-dark-card border-border dark:border-dark-border text-text dark:text-dark-text'
+                    : 'bg-background dark:bg-dark-background hover:bg-secondary dark:hover:bg-dark-secondary border-border dark:border-dark-border text-text dark:text-dark-text')
                 }
               >
                 {t}
@@ -154,56 +158,58 @@ export default function Feed() {
             ))}
           </div>
 
-          {loading && <div className="text-gray-400">Loading...</div>}
-          {error && <div className="text-red-400">{error}</div>}
+          {loading && <div className="text-secondary dark:text-dark-secondary">Loading...</div>}
+          {error && <div className="text-red-400">Error: {error}</div>}
           {!loading && filtered.length === 0 && (
-            <div className="text-gray-500">No documents found.</div>
+            <div className="text-secondary dark:text-dark-secondary">No documents found.</div>
           )}
 
           <div className="space-y-4">
             {filtered.map((p) => (
               <article
                 key={p._id}
-                className="border border-gray-800 rounded-xl p-5 bg-gray-900 hover:bg-gray-800 transition"
+                className="border border-border dark:border-dark-border rounded-xl p-5 bg-card dark:bg-dark-card hover:bg-secondary dark:hover:bg-dark-secondary transition"
               >
-                <h2 className="text-xl font-semibold mb-1"><Link to={`/docs/${p._id}`}>{p.title}</Link></h2>
-                <p className="text-gray-300 mb-3">
-                  {(p.problem || "").slice(0, 180)}
-                  {p.problem && p.problem.length > 180 ? "..." : ""}
+                <h2 className="text-xl font-semibold mb-1 text-text dark:text-dark-text">
+                  <Link to={`/docs/${p._id}`}>{p.title}</Link>
+                </h2>
+                <p className="text-secondary dark:text-dark-secondary mb-3">
+                  {(p.problem || '').slice(0, 180)}
+                  {p.problem && p.problem.length > 180 ? '...' : ''}
                 </p>
 
                 <div className="flex flex-wrap gap-2 mb-4">
                   {(p.tags || []).map((t, i) => (
                     <span
                       key={`${t}-${i}`}
-                      className="px-2 py-1 text-xs rounded-full border border-gray-700 bg-gray-900 text-gray-200"
+                      className="px-2 py-1 text-xs rounded-full border border-border dark:border-dark-border bg-card dark:bg-dark-card text-text dark:text-dark-text"
                     >
                       {t}
                     </span>
                   ))}
                 </div>
 
-                <div className="flex items-center justify-between text-sm text-gray-300">
+                <div className="flex items-center justify-between text-sm text-secondary dark:text-dark-secondary">
                   <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center text-gray-200">
-                      {(p.createdBy?.name || "U")[0]}
+                    <div className="w-6 h-6 rounded-full bg-card dark:bg-dark-card flex items-center justify-center text-text dark:text-dark-text">
+                      {(p.createdBy?.name || 'U')[0]}
                     </div>
-                    <span>{p.createdBy?.name || "Unknown"}</span>
+                    <span>{p.createdBy?.name || 'Unknown'}</span>
                     <span>•</span>
                     <span>{formatRelative(p.createdAt)}</span>
                   </div>
 
                   <div className="flex items-center gap-4">
                     <span className="flex items-center gap-1">
-                      <Heart size={16} className="text-gray-500" />
+                      <Heart size={16} className="text-secondary dark:text-dark-secondary" />
                       {p.Likes?.length || 0}
                     </span>
                     <span className="flex items-center gap-1">
-                      <MessageSquare size={16} className="text-gray-500" />
+                      <MessageSquare size={16} className="text-secondary dark:text-dark-secondary" />
                       {/* Comments not implemented yet */}
                       0
                     </span>
-                    <Bookmark size={16} className="text-gray-500" />
+                    <Bookmark size={16} className="text-secondary dark:text-dark-secondary" />
                   </div>
                 </div>
               </article>
