@@ -109,7 +109,7 @@ const Landing = () => {
           className="text-3xl md:text-5xl font-extrabold mb-14 text-center text-text dark:text-dark-text tracking-tight"
         >
           Why Developers{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-600 to-pink-700 dark:from-dark-primary dark:via-purple-400 dark:to-pink-500">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-600 to-pink-700 dark:from-dark-primary dark:via-purple-400 dark:to-pink-500">
             Love
           </span>{' '}
           DebugDiary
@@ -164,7 +164,7 @@ const Landing = () => {
           className="text-3xl md:text-5xl font-extrabold mb-4 md:mb-8 text-text dark:text-dark-text"
         >
           Join the{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-600 dark:from-dark-primary dark:to-cyan-400">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-600 dark:from-dark-primary dark:to-cyan-400">
             Movement
           </span>
         </Motion.h2>
