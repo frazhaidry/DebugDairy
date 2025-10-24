@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // added useEffect
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -7,53 +7,58 @@ import 'react-toastify/dist/ReactToastify.css';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({}); // added for realtime errors
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true); // added for disable button
   const navigate = useNavigate();
 
-  //for validation
-  const validateForm = () => {
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email.trim()) {
-      toast.error('Email is required');
-      return false;
-    }
-    if (!emailRegex.test(email)) {
-      toast.error('Please enter a valid email address');
-      return false;
+  // updated validation to match register
+  const validateForm = (field, value) => {
+    let newErrors = { ...errors };
+
+    if (field === 'email' || field === 'all') {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email.trim()) newErrors.email = 'Email is required';
+      else if (!emailRegex.test(email)) newErrors.email = 'Enter a valid email address';
+      else delete newErrors.email;
     }
 
-    // Password validation
-    if (!password) {
-      toast.error('Password is required');
-      return false;
-    }
-    if (password.length < 6) {
-      toast.error('Password must be at least 6 characters long');
-      return false;
+    if (field === 'password' || field === 'all') {
+      if (!password) newErrors.password = 'Password is required';
+      else if (password.length < 6)
+        newErrors.password = 'Password must be at least 6 characters long';
+      else if (!/[A-Z]/.test(password))
+        newErrors.password = 'Must contain at least one uppercase letter';
+      else if (!/[0-9]/.test(password))
+        newErrors.password = 'Must contain at least one number';
+      else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password))
+        newErrors.password = 'Must contain at least one special character';
+      else delete newErrors.password;
     }
 
-    return true;
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
+
+  // enable/disable login button in realtime
+  useEffect(() => {
+    const valid = validateForm('all');
+    setIsButtonDisabled(!valid);
+  }, [email, password]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm('all')) return;
 
     try {
-      const res = await axios.post('http://localhost:8000/api/auth/login',
+      const res = await axios.post(
+        'http://localhost:8000/api/auth/login',
         { email, password },
         { withCredentials: true }
       );
 
-      // Save token to localStorage!
-      localStorage.setItem('token', res.data.token);   // <-- Important line
-      //   console.log(res);
-
+      localStorage.setItem('token', res.data.token);
       toast.success(res.data.message);
-      navigate('/'); // Redirect to homepage
+      navigate('/');
     } catch (error) {
       toast.error(error.response?.data?.message || 'Login failed');
     }
@@ -94,6 +99,7 @@ const Login = () => {
             <path d="M9.707 16.293a1 1 0 0 1-1.414 1.414l-4.586-4.586a1 1 0 0 1 0-1.414l4.586-4.586a1 1 0 0 1 1.414 1.414L6.414 12l3.293 3.293zM14.293 7.707a1 1 0 0 1 1.414-1.414l4.586 4.586a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414-1.414L17.586 12l-3.293-3.293z" />
           </svg>
         </div>
+
         {/* Right Side - Login form */}
         <div style={{
           flex: 1,
@@ -113,19 +119,20 @@ const Login = () => {
             backgroundColor: '#232323',
           }}>
             <h2 style={{ color: '#FFFFFF', marginBottom: '1.5rem', textAlign: 'center', fontSize: '1.5rem' }}>Login to DebugDiary</h2>
+
+            {/* Email */}
             <label htmlFor="email" style={{ color: '#CCCCCC', display: 'block', marginBottom: '0.5rem' }}>Email</label>
             <input
               type="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
               style={{
                 width: '100%',
                 padding: '0.75rem',
                 borderRadius: '4px',
                 border: 'none',
-                marginBottom: '1.25rem',
+                marginBottom: errors.email ? '0.5rem' : '1.25rem',
                 outline: 'none',
                 backgroundColor: '#181818',
                 color: '#FFFFFF',
@@ -133,19 +140,25 @@ const Login = () => {
               }}
               placeholder="you@example.com"
             />
+            {errors.email && (
+              <small style={{ color: '#FF6B6B', display: 'block', marginBottom: '1rem' }}>
+                {errors.email}
+              </small>
+            )}
+
+            {/* Password */}
             <label htmlFor="password" style={{ color: '#CCCCCC', display: 'block', marginBottom: '0.5rem' }}>Password</label>
             <input
               type="password"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
               style={{
                 width: '100%',
                 padding: '0.75rem',
                 borderRadius: '4px',
                 border: 'none',
-                marginBottom: '1.5rem',
+                marginBottom: errors.password ? '0.5rem' : '1.5rem',
                 outline: 'none',
                 backgroundColor: '#181818',
                 color: '#FFFFFF',
@@ -153,19 +166,31 @@ const Login = () => {
               }}
               placeholder="Enter your password"
             />
-            <button type="submit" style={{
-              width: '100%',
-              padding: '0.75rem',
-              backgroundColor: '#007BFF',
-              color: '#FFFFFF',
-              border: 'none',
-              borderRadius: '4px',
-              fontSize: '1rem',
-              cursor: 'pointer',
-              fontWeight: '600',
-            }}>
+            {errors.password && (
+              <small style={{ color: '#FF6B6B', display: 'block', marginBottom: '1rem' }}>
+                {errors.password}
+              </small>
+            )}
+
+            <button
+              type="submit"
+              disabled={isButtonDisabled}
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                backgroundColor: isButtonDisabled ? '#444' : '#007BFF',
+                color: '#FFFFFF',
+                border: 'none',
+                borderRadius: '4px',
+                fontSize: '1rem',
+                cursor: isButtonDisabled ? 'not-allowed' : 'pointer',
+                fontWeight: '600',
+                transition: 'background-color 0.3s ease',
+              }}
+            >
               Login
             </button>
+
             {/* Register Here Link */}
             <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
               <span style={{ color: '#CCCCCC' }}>Don't have an account? </span>
