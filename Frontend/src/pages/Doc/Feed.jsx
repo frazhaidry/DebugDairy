@@ -168,7 +168,14 @@ export default function Feed() {
             {filtered.map((p) => (
               <article
                 key={p._id}
-                className="border border-border dark:border-dark-border rounded-xl p-5 bg-card dark:bg-dark-card hover:bg-secondary dark:hover:bg-dark-secondary transition"
+
+                className="relative border border-border dark:border-dark-border rounded-xl p-5 
+bg-card dark:bg-dark-card transition-all duration-300 ease-in-out overflow-hidden 
+hover:scale-[1.03] hover:shadow-lg hover:bg-secondary/80 dark:hover:bg-dark-secondary/80 
+before:absolute before:top-0 before:left-0 before:w-full before:h-[3px] 
+before:bg-gradient-to-r before:from-primary before:to-secondary 
+before:scale-x-0 hover:before:scale-x-100 before:origin-left 
+before:transition-transform before:duration-300"
               >
                 <h2 className="text-xl font-semibold mb-1 text-text dark:text-dark-text">
                   <Link to={`/docs/${p._id}`}>{p.title}</Link>
