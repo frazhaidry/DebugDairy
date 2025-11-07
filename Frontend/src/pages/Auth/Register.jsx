@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -56,9 +57,11 @@ const Register = () => {
         password,
       });
       toast.success(res.data.message);
+      navigate('/login');
       setName('');
       setEmail('');
       setPassword('');
+
     } catch (error) {
       toast.error(error.response?.data?.message || 'Registration failed');
     }
@@ -223,3 +226,24 @@ const Register = () => {
 };
 
 export default Register;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

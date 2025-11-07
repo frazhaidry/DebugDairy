@@ -38,7 +38,7 @@ git clone https://github.com/frazhaidry/DebugDairy.git
 
 2. **Install dependencies**
 
-```bash
+```bash  
 npm install
 # or
 yarn install
