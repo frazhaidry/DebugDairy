@@ -59,9 +59,17 @@ const Login = () => {
         { withCredentials: true }
       );
 
-      localStorage.setItem('token', res.data.token);
-      toast.success(res.data.message || 'Login successful');
-      navigate('/');
+      // ✅ Save both user and token to localStorage
+if (res.data?.user) {
+  localStorage.setItem('user', JSON.stringify(res.data.user));
+}
+if (res.data?.token) {
+  localStorage.setItem('token', res.data.token);
+}
+
+toast.success(res.data.message || 'Login successful');
+navigate('/');
+
     } catch (error) {
       toast.error(error.response?.data?.message || 'Login failed');
     }
