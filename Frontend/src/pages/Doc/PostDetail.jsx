@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 import { Heart, Link as LinkIcon, ArrowLeft, User } from "lucide-react";
+import Comments from '../../Components/Comments/Comments';
+
 
 function formatDate(dateStr) {
   const d = new Date(dateStr);
@@ -11,11 +13,14 @@ function formatDate(dateStr) {
 export default function PostDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const currentUser = JSON.parse(localStorage.getItem('user')); // ✅ move this up here
+  console.log("Current user in PostDetail:", currentUser);
+
+
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // ✅ Track dark/light mode from localStorage or class
   const [isDarkMode, setIsDarkMode] = useState(
     document.documentElement.classList.contains("dark")
   );
@@ -38,8 +43,10 @@ export default function PostDetail() {
     (async () => {
       try {
         setLoading(true);
-        const data = await axiosInstance.get(`/posts/${id}`);
-        const p = data.post || data;
+        const response = await axiosInstance.get(`/posts/${id}`);
+        console.log("Fetched post:", response);
+        const p = response.post || response;
+
         if (mounted) setPost(p);
       } catch (e) {
         setError(e.message || "Failed to load post");
@@ -60,18 +67,19 @@ export default function PostDetail() {
     return <div className="max-w-4xl mx-auto p-6 text-white text-center">Post not found</div>;
 
   return (
-    // ✅ Dynamically apply dark/light background
     <div
-      className={`min-h-screen flex items-center justify-center py-10 px-4 transition-colors duration-500 ${isDarkMode
+      className={`min-h-screen flex items-center justify-center py-10 px-4 transition-colors duration-500 ${
+        isDarkMode
           ? "bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white"
           : "bg-gradient-to-b from-gray-100 via-white to-gray-200 text-gray-900"
-        }`}
+      }`}
     >
       <div
-        className={`max-w-3xl w-full backdrop-blur-lg border rounded-2xl shadow-2xl p-8 transition duration-300 ${isDarkMode
+        className={`max-w-3xl w-full backdrop-blur-lg border rounded-2xl shadow-2xl p-8 transition duration-300 ${
+          isDarkMode
             ? "bg-white/5 border-white/10 hover:shadow-blue-500/20"
             : "bg-white border-gray-200 hover:shadow-blue-200"
-          }`}
+        }`}
       >
         {/* Back Button */}
         <button
@@ -161,6 +169,12 @@ export default function PostDetail() {
           >
             ← Back to Feed
           </Link>
+        </div>
+
+        {/* 💬 Comments Section */}
+        <div className="mt-10">
+          <h2 style={{ color: 'red' }}>COMMENTS TEST — if you see this, component is rendering.</h2>
+          <Comments postId={post?._id || id} currentUser={currentUser} />
         </div>
       </div>
     </div>
