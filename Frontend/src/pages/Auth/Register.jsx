@@ -12,7 +12,25 @@ const Register = () => {
   const [errors, setErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
 
-  // Real-time validation
+  // ✅ Dark mode detection (same as CreateDoc)
+  const [isDarkMode, setIsDarkMode] = useState(
+    document.documentElement.classList.contains('dark')
+  );
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // ✅ Real-time validation
   useEffect(() => {
     validateFields();
   }, [name, email, password]);
@@ -22,20 +40,27 @@ const Register = () => {
 
     // Name validation
     if (!name.trim()) newErrors.name = 'Name is required';
-    else if (!/^[A-Za-z ]+$/.test(name)) newErrors.name = 'Name must contain only alphabets';
-    else if (name.length < 2) newErrors.name = 'Name must be at least 2 characters long';
+    else if (!/^[A-Za-z ]+$/.test(name))
+      newErrors.name = 'Name must contain only alphabets';
+    else if (name.length < 2)
+      newErrors.name = 'Name must be at least 2 characters long';
 
     // Email validation
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
     if (!email.trim()) newErrors.email = 'Email is required';
-    else if (!emailRegex.test(email)) newErrors.email = 'Please enter a valid email address';
+    else if (!emailRegex.test(email))
+      newErrors.email = 'Please enter a valid email address';
 
     // Password validation
     if (!password) newErrors.password = 'Password is required';
-    else if (password.length < 6) newErrors.password = 'Password must be at least 6 characters long';
-    else if (!/[A-Z]/.test(password)) newErrors.password = 'Must contain at least one uppercase letter';
-    else if (!/[0-9]/.test(password)) newErrors.password = 'Must contain at least one number';
-    else if (!/[^A-Za-z0-9]/.test(password)) newErrors.password = 'Must contain at least one special character';
+    else if (password.length < 6)
+      newErrors.password = 'Password must be at least 6 characters long';
+    else if (!/[A-Z]/.test(password))
+      newErrors.password = 'Must contain at least one uppercase letter';
+    else if (!/[0-9]/.test(password))
+      newErrors.password = 'Must contain at least one number';
+    else if (!/[^A-Za-z0-9]/.test(password))
+      newErrors.password = 'Must contain at least one special character';
 
     setErrors(newErrors);
     setIsFormValid(Object.keys(newErrors).length === 0);
@@ -61,13 +86,12 @@ const Register = () => {
       setName('');
       setEmail('');
       setPassword('');
-
     } catch (error) {
       toast.error(error.response?.data?.message || 'Registration failed');
     }
   };
 
-  // Common input style
+  // ✅ Styles that depend on dark mode
   const inputStyle = {
     width: '100%',
     padding: '0.75rem',
@@ -75,9 +99,10 @@ const Register = () => {
     border: 'none',
     marginBottom: '0.75rem',
     outline: 'none',
-    backgroundColor: '#181818',
-    color: '#FFFFFF',
+    backgroundColor: isDarkMode ? '#181818' : '#f0f0f0',
+    color: isDarkMode ? '#FFFFFF' : '#111',
     fontSize: '1rem',
+    transition: 'background-color 0.3s ease, color 0.3s ease',
   };
 
   const errorStyle = {
@@ -88,69 +113,115 @@ const Register = () => {
 
   return (
     <>
-      <div style={{
-        minHeight: '100vh',
-        width: '100vw',
-        display: 'flex',
-        backgroundColor: '#121212',
-        color: '#fff',
-        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-      }}>
-        {/* Left Side */}
-        <div style={{
-          flex: 1,
-          backgroundColor: '#1E1E1E',
+      <div
+        style={{
+          minHeight: '100vh',
+          width: '100vw',
           display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          boxShadow: 'inset 10px 0 30px #007BFF',
-          height: '100vh',
-        }}>
-          <h2 style={{ fontSize: '2.2rem', marginBottom: '1rem' }}>Join DebugDiary</h2>
-          <p style={{
-            fontSize: '1.1rem',
-            opacity: 0.7,
-            maxWidth: '320px',
-            textAlign: 'center',
-            marginBottom: '2rem'
-          }}>
+          transition: 'all 0.5s ease',
+          backgroundColor: isDarkMode ? '#121212' : '#f9f9f9',
+          color: isDarkMode ? '#fff' : '#000',
+          fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        }}
+      >
+        {/* Left Side */}
+        <div
+          style={{
+            flex: 1,
+            backgroundColor: isDarkMode ? '#1E1E1E' : '#E6E6E6',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: isDarkMode
+              ? 'inset 10px 0 30px #007BFF'
+              : 'inset 10px 0 30px #80BFFF',
+            height: '100vh',
+            transition: 'background-color 0.5s ease',
+          }}
+        >
+          <h2
+            style={{
+              fontSize: '2.2rem',
+              marginBottom: '1rem',
+              color: isDarkMode ? '#fff' : '#111',
+            }}
+          >
+            Join DebugDiary
+          </h2>
+          <p
+            style={{
+              fontSize: '1.1rem',
+              opacity: 0.8,
+              maxWidth: '320px',
+              textAlign: 'center',
+              marginBottom: '2rem',
+              color: isDarkMode ? '#ddd' : '#333',
+            }}
+          >
             Start logging bugs and breakthroughs with the developer community.
           </p>
-          <svg width="100" height="100" viewBox="0 0 24 24" fill="#007BFF" xmlns="http://www.w3.org/2000/svg" style={{ marginBottom: '2rem' }}>
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-1.85 0-3.55-.63-4.9-1.69l1.03-1.55C9.06 17.29 10.47 18 12 18c1.53 0 2.94-.71 3.87-1.24l1.03 1.55C15.55 19.37 13.85 20 12 20zm6.36-3.09l-1.03-1.55c.37-.56.67-1.19.83-1.87H19c0 .89-.29 1.78-.64 2.42zM5 12c0-.44.04-.88.1-1.3h1.71c-.16.8-.29 1.6-.29 2.3s.13 1.5.29 2.3H5.1A7.882 7.882 0 0 1 5 12zm1.53 5.09C6.29 15.78 6 14.89 6 14h1.21c.14.69.33 1.34.56 1.99l-1.03 1.55zM12 6c2.37 0 4.35 1.64 4.85 3.84h-1.71A3.002 3.002 0 0 0 12 8c-1.3 0-2.4.84-2.84 2.04h-1.71C7.65 7.64 9.63 6 12 6zm-2.97 5.34A4.98 4.98 0 0 1 12 10c1.3 0 2.4.84 2.84 2.04C14.95 14.32 13.6 16 12 16s-2.95-1.68-2.97-4.66zm7.42-1.9A7.936 7.936 0 0 1 19 12h-1.21c-.16-.8-.29-1.6-.29-2.3s.13-1.5.29-2.3H18.9z" />
+          <svg
+            width="100"
+            height="100"
+            viewBox="0 0 24 24"
+            fill="#007BFF"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ marginBottom: '2rem' }}
+          >
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-1.85 0-3.55-.63-4.9-1.69l1.03-1.55C9.06 17.29 10.47 18 12 18c1.53 0 2.94-.71 3.87-1.24l1.03 1.55C15.55 19.37 13.85 20 12 20z" />
           </svg>
         </div>
 
         {/* Right Side - Register Form */}
-        <div style={{
-          flex: 1,
-          backgroundColor: '#181818',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-        }}>
-          <form onSubmit={handleSubmit} style={{
-            padding: '2.5rem 2rem',
-            borderRadius: '8px',
-            width: '100%',
-            maxWidth: '400px',
-            boxShadow: '0 0 24px rgba(0,0,0,0.7)',
-            backgroundColor: '#232323',
-          }}>
-            <h2 style={{
-              color: '#FFFFFF',
-              marginBottom: '1.5rem',
-              textAlign: 'center',
-              fontSize: '1.5rem'
-            }}>
+        <div
+          style={{
+            flex: 1,
+            backgroundColor: isDarkMode ? '#181818' : '#fff',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+            transition: 'background-color 0.5s ease',
+          }}
+        >
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              padding: '2.5rem 2rem',
+              borderRadius: '8px',
+              width: '100%',
+              maxWidth: '400px',
+              boxShadow: isDarkMode
+                ? '0 0 24px rgba(0,0,0,0.7)'
+                : '0 0 24px rgba(0,0,0,0.1)',
+              backgroundColor: isDarkMode ? '#232323' : '#fefefe',
+              transition: 'all 0.4s ease',
+            }}
+          >
+            <h2
+              style={{
+                color: isDarkMode ? '#FFFFFF' : '#111',
+                marginBottom: '1.5rem',
+                textAlign: 'center',
+                fontSize: '1.5rem',
+              }}
+            >
               Register for DebugDiary
             </h2>
 
             {/* Name */}
-            <label htmlFor="name" style={{ color: '#CCCCCC', display: 'block', marginBottom: '0.5rem' }}>Name</label>
+            <label
+              htmlFor="name"
+              style={{
+                color: isDarkMode ? '#CCCCCC' : '#333',
+                display: 'block',
+                marginBottom: '0.5rem',
+              }}
+            >
+              Name
+            </label>
             <input
               type="text"
               id="name"
@@ -162,7 +233,16 @@ const Register = () => {
             {errors.name && <p style={errorStyle}>{errors.name}</p>}
 
             {/* Email */}
-            <label htmlFor="email" style={{ color: '#CCCCCC', display: 'block', marginBottom: '0.5rem' }}>Email</label>
+            <label
+              htmlFor="email"
+              style={{
+                color: isDarkMode ? '#CCCCCC' : '#333',
+                display: 'block',
+                marginBottom: '0.5rem',
+              }}
+            >
+              Email
+            </label>
             <input
               type="email"
               id="email"
@@ -174,7 +254,16 @@ const Register = () => {
             {errors.email && <p style={errorStyle}>{errors.email}</p>}
 
             {/* Password */}
-            <label htmlFor="password" style={{ color: '#CCCCCC', display: 'block', marginBottom: '0.5rem' }}>Password</label>
+            <label
+              htmlFor="password"
+              style={{
+                color: isDarkMode ? '#CCCCCC' : '#333',
+                display: 'block',
+                marginBottom: '0.5rem',
+              }}
+            >
+              Password
+            </label>
             <input
               type="password"
               id="password"
@@ -185,8 +274,16 @@ const Register = () => {
             />
             {errors.password && <p style={errorStyle}>{errors.password}</p>}
 
-            <p style={{ color: '#CCCCCC', fontSize: '0.875rem', marginBottom: '1rem', opacity: 0.7 }}>
-              Must include 6+ chars, one uppercase, one number, and one special symbol.
+            <p
+              style={{
+                color: isDarkMode ? '#CCCCCC' : '#555',
+                fontSize: '0.875rem',
+                marginBottom: '1rem',
+                opacity: 0.7,
+              }}
+            >
+              Must include 6+ chars, one uppercase, one number, and one special
+              symbol.
             </p>
 
             <button
@@ -195,7 +292,11 @@ const Register = () => {
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                backgroundColor: isFormValid ? '#007BFF' : '#555',
+                backgroundColor: isFormValid
+                  ? '#007BFF'
+                  : isDarkMode
+                  ? '#444'
+                  : '#ccc',
                 color: '#FFFFFF',
                 border: 'none',
                 borderRadius: '4px',
@@ -209,10 +310,16 @@ const Register = () => {
             </button>
 
             <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-              <span style={{ color: '#CCCCCC' }}>Already have an account? </span>
+              <span style={{ color: isDarkMode ? '#ccc' : '#333' }}>
+                Already have an account?{' '}
+              </span>
               <Link
                 to="/login"
-                style={{ color: '#007BFF', textDecoration: 'underline', cursor: 'pointer' }}
+                style={{
+                  color: '#007BFF',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                }}
               >
                 Login here
               </Link>
@@ -226,16 +333,6 @@ const Register = () => {
 };
 
 export default Register;
-
-
-
-
-
-
-
-
-
-
 
 
 
