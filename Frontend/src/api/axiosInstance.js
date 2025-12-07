@@ -1,9 +1,14 @@
 import axios from "axios";
 
 // Create a pre-configured Axios instance for DebugDiary API
+const baseURL =
+  import.meta.env.MODE === "production"
+    ? import.meta.env.VITE_API_URL_PROD
+    : import.meta.env.VITE_API_URL;
+
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8000/api",
-  withCredentials: true, // send HTTP-only JWT cookie
+  baseURL: `${baseURL}/api`,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
