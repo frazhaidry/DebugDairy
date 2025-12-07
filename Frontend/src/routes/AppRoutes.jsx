@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import ProtectedRoute from "../components/ProtectedRoute.jsx"; // Adjust path as needed
+import ProtectedRoute from "../Components/ProtectedRoute.jsx" // Adjust path as needed
 import LandingPage from "../pages/Home/Landing.jsx";
 import Feed from "../pages/Doc/Feed.jsx";
 import CreateDoc from "../pages/Doc/CreateDoc.jsx";
